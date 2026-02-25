@@ -294,8 +294,8 @@ make_canonical <-function(pq_tree)
 
   for (p_node in single_child_p)
   {
-    child_of_p_node <- V(canonical_pq) [ suppressWarnings(nei(p_node, mode="out")) ]
-    parent_of_p_node <- V(canonical_pq) [ suppressWarnings(nei(p_node, mode="in")) ]
+    child_of_p_node <- V(canonical_pq) [ suppressWarnings(.nei(p_node, mode="out")) ]
+    parent_of_p_node <- V(canonical_pq) [ suppressWarnings(.nei(p_node, mode="in")) ]
 
     for (child_of_p in child_of_p_node)
     {
@@ -324,7 +324,7 @@ count_leaf_descendents <- function(pq_tree, curr_node, children_counts)
     return(children_counts)
   } else {
     children_count = 0
-    for (child in V(pq_tree) [ suppressWarnings(nei(curr_node, mode="out")) ])
+    for (child in V(pq_tree) [ suppressWarnings(.nei(curr_node, mode="out")) ])
     {
       children_counts <- count_leaf_descendents(pq_tree, child, children_counts)
       if (V(pq_tree)[child]$type == "leaf")
@@ -467,7 +467,7 @@ measure_diameter_path <- function(pq_tree, curr_node, path_lengths)
   } else {
 
     children_count = 0
-    for (child in V(pq_tree) [ suppressWarnings(nei(curr_node, mode="out")) ])
+    for (child in V(pq_tree) [ suppressWarnings(.nei(curr_node, mode="out")) ])
     {
       children_counts <- count_leaf_descendents(pq_tree, child, children_counts)
       if (V(pq_tree)[child]$type == "leaf")
@@ -499,7 +499,7 @@ assign_cell_lineage <- function(pq_tree, curr_node, assigned_state, node_states)
     node_states[V(pq_tree)[curr_node]$name] = assigned_state
     return(node_states)
   } else {
-    for (child in V(pq_tree) [ suppressWarnings(nei(curr_node, mode="out")) ])
+    for (child in V(pq_tree) [ suppressWarnings(.nei(curr_node, mode="out")) ])
     {
       node_states <- assign_cell_lineage(pq_tree, child, assigned_state, node_states)
     }
@@ -519,7 +519,7 @@ extract_good_ordering <- function(pq_tree, curr_node, dist_matrix)
   }else if (V(pq_tree)[curr_node]$type == "P"){
     #print ("ordering P node")
     p_level <- list()
-    for (child in V(pq_tree) [ suppressWarnings(nei(curr_node, mode="out")) ])
+    for (child in V(pq_tree) [ suppressWarnings(.nei(curr_node, mode="out")) ])
     {
       p_level[[length(p_level)+1]] <- extract_good_ordering(pq_tree, child, dist_matrix)
     }
@@ -530,7 +530,7 @@ extract_good_ordering <- function(pq_tree, curr_node, dist_matrix)
   }else if(V(pq_tree)[curr_node]$type == "Q"){
     #print ("ordering Q node")
     q_level <- list()
-    for (child in V(pq_tree) [ suppressWarnings(nei(curr_node, mode="out")) ])
+    for (child in V(pq_tree) [ suppressWarnings(.nei(curr_node, mode="out")) ])
     {
       q_level[[length(q_level)+1]] <- extract_good_ordering(pq_tree, child, dist_matrix)
     }
@@ -602,16 +602,16 @@ extract_good_branched_ordering <- function(orig_pq_tree, curr_node, dist_matrix,
     branch_id <- names(branch_node_counts)[i]
     #print (branch_id)
     branch_tree <- branch_tree + vertex(branch_id)
-    parents <- V(pq_tree)[suppressWarnings(nei(names(branch_node_counts)[i], mode="in"))]
+    parents <- V(pq_tree)[suppressWarnings(.nei(names(branch_node_counts)[i], mode="in"))]
     if (length(parents) > 0 && parents$type == "P")
     {
-      p_node_parent <- V(pq_tree)[suppressWarnings(nei(names(branch_node_counts)[i], mode="in"))]
-      parent_branch_id <- V(pq_tree)[suppressWarnings(nei(p_node_parent, mode="in"))]$name
+      p_node_parent <- V(pq_tree)[suppressWarnings(.nei(names(branch_node_counts)[i], mode="in"))]
+      parent_branch_id <- V(pq_tree)[suppressWarnings(.nei(p_node_parent, mode="in"))]$name
       #print (parent_branch_id)
       #print (branch_id)
       branch_tree <- branch_tree + edge(parent_branch_id, branch_id)
     }
-    pq_tree[V(pq_tree) [ suppressWarnings(nei(names(branch_node_counts)[i], mode="in")) ], names(branch_node_counts)[i] ] <- FALSE
+    pq_tree[V(pq_tree) [ suppressWarnings(.nei(names(branch_node_counts)[i], mode="in")) ], names(branch_node_counts)[i] ] <- FALSE
   }
 
   #branch_point_roots[[length(branch_point_roots) + 1]] <- curr_node
@@ -657,7 +657,7 @@ extract_good_branched_ordering <- function(orig_pq_tree, curr_node, dist_matrix,
       curr_branch_root_cell <- names(curr_branch_pseudotimes)[length(curr_branch_pseudotimes)]
     }
 
-    for (child in V(branch_tree) [ suppressWarnings(nei(curr_branch, mode="out")) ])
+    for (child in V(branch_tree) [ suppressWarnings(.nei(curr_branch, mode="out")) ])
     {
       child_cell_ordering_subtree <- graph.empty()
 
@@ -730,7 +730,7 @@ extract_good_branched_ordering <- function(orig_pq_tree, curr_node, dist_matrix,
     cell_tree <- ordering_tree_res$subtree
     V(cell_tree)[curr_cell]$cell_state = curr_state
 
-    children <- V(cell_tree) [ suppressWarnings(nei(curr_cell, mode="out")) ]
+    children <- V(cell_tree) [ suppressWarnings(.nei(curr_cell, mode="out")) ]
     ordering_tree_res$subtree <- cell_tree
 
     if (length(children) == 1){
@@ -753,11 +753,11 @@ extract_good_branched_ordering <- function(orig_pq_tree, curr_node, dist_matrix,
     cell_tree <- ordering_tree_res$subtree
     curr_cell_pseudotime <- last_pseudotime
     V(cell_tree)[curr_cell]$pseudotime = curr_cell_pseudotime
-    V(cell_tree)[curr_cell]$parent =  V(cell_tree)[ suppressWarnings(nei(curr_cell, mode="in")) ]$name
+    V(cell_tree)[curr_cell]$parent =  V(cell_tree)[ suppressWarnings(.nei(curr_cell, mode="in")) ]$name
     #print (curr_cell_pseudotime)
 
     ordering_tree_res$subtree <- cell_tree
-    children <- V(cell_tree) [ suppressWarnings(nei(curr_cell, mode="out")) ]
+    children <- V(cell_tree) [ suppressWarnings(.nei(curr_cell, mode="out")) ]
 
     for (child in children) {
       next_node <- V(cell_tree)[child]$name
@@ -916,7 +916,7 @@ extract_ddrtree_ordering <- function(cds, root_cell, verbose=T)
 
   mst_traversal <- graph.dfs(dp_mst,
                              root=root_cell,
-                             neimode = "all",
+                             mode = "all",
                              unreachable=FALSE,
                              father=TRUE)
   mst_traversal$father <- as.numeric(mst_traversal$father)
@@ -1415,9 +1415,8 @@ reduceDimension <- function(cds,
       #FM <- FM[genes_to_keep,]
       #expression_means <- expression_means[genes_to_keep]
       #expression_vars <- expression_vars[genes_to_keep]
-      # Here✬s how to take the top PCA loading genes, but using
+      # Here is how to take the top PCA loading genes, but using
       # sparseMatrix operations the whole time, using irlba.
-
 
       if("num_dim" %in% names(extra_arguments)){ #when you pass pca_dim to the function, the number of dimension used for tSNE dimension reduction is used
         num_dim <- extra_arguments$num_dim #variance_explained
@@ -1603,7 +1602,7 @@ project2MST <- function(cds, Projection_Method){
   else{
     P <- matrix(rep(0, length(Z)), nrow = nrow(Z)) #Y
     for(i in 1:length(closest_vertex)) {
-      neighbors <- names(V(dp_mst) [ suppressWarnings(nei(closest_vertex_names[i], mode="all")) ])
+      neighbors <- names(V(dp_mst) [ suppressWarnings(.nei(closest_vertex_names[i], mode="all")) ])
       projection <- NULL
       distance <- NULL
       Z_i <- Z[, i]
@@ -1618,7 +1617,7 @@ project2MST <- function(cds, Projection_Method){
         projection <- rbind(projection, tmp)
         distance <- c(distance, dist(rbind(Z_i, tmp)))
       }
-      if(class(projection) != 'matrix')
+      if(!is(projection, 'matrix'))
         projection <- as.matrix(projection)
       P[, i] <- projection[which(distance == min(distance))[1], ] #use only the first index to avoid assignment error
     }
