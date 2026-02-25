@@ -111,7 +111,7 @@ buildBranchCellDataSet <- function(cds,
     path_to_ancestor <- names(unlist(path_to_ancestor$vpath))
     
     #post_branch_cells <- c()
-    for (backbone_nei in V(pr_graph_cell_proj_mst)[suppressWarnings(nei(branch_cell))]$name){
+    for (backbone_nei in V(pr_graph_cell_proj_mst)[suppressWarnings(.nei(branch_cell))]$name){
       descendents <- bfs(mst_no_branch_point, V(mst_no_branch_point)[backbone_nei], unreachable=FALSE)
       descendents <- descendents$order[!is.na(descendents$order)]
       descendents <- V(mst_no_branch_point)[descendents]$name
