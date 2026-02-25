@@ -161,22 +161,22 @@ plot_cell_trajectory <- function(cds,
     g <- ggplot(data=data_df, aes(x=data_dim_1, y=data_dim_2)) 
   }
   if (show_tree){
-    g <- g + geom_segment(aes_string(x="source_prin_graph_dim_1", y="source_prin_graph_dim_2", xend="target_prin_graph_dim_1", yend="target_prin_graph_dim_2"), size=cell_link_size, linetype="solid", na.rm=TRUE, data=edge_df)
+    g <- g + geom_segment(aes(x="source_prin_graph_dim_1", y="source_prin_graph_dim_2", xend="target_prin_graph_dim_1", yend="target_prin_graph_dim_2"), size=cell_link_size, linetype="solid", na.rm=TRUE, data=edge_df)
   }
   
   # FIXME: setting size here overrides the marker expression funtionality. 
   # Don't do it!
   if (is.null(markers_exprs) == FALSE && nrow(markers_exprs) > 0){
     if(use_color_gradient) {
-      # g <- g + geom_point(aes_string(color = color_by), na.rm = TRUE)
+      # g <- g + geom_point(aes(color = color_by), na.rm = TRUE)
     } else {
-      g <- g + geom_point(aes_string(color = color_by), na.rm = TRUE)
+      g <- g + geom_point(aes(color = color_by), na.rm = TRUE)
     }
   }else {
     if(use_color_gradient) {
-      # g <- g + geom_point(aes_string(color = color_by), na.rm = TRUE)
+      # g <- g + geom_point(aes(color = color_by), na.rm = TRUE)
     } else {
-      g <- g + geom_point(aes_string(color = color_by), size=I(cell_size), na.rm = TRUE)
+      g <- g + geom_point(aes(color = color_by), size=I(cell_size), na.rm = TRUE)
     }
   }
   
@@ -188,9 +188,9 @@ plot_cell_trajectory <- function(cds,
       mutate(branch_point_idx = seq_len(n()))
     
     g <- g +
-      geom_point(aes_string(x="prin_graph_dim_1", y="prin_graph_dim_2"),
+      geom_point(aes(x="prin_graph_dim_1", y="prin_graph_dim_2"),
                  size=5, na.rm=TRUE, branch_point_df) +
-      geom_text(aes_string(x="prin_graph_dim_1", y="prin_graph_dim_2", label="branch_point_idx"),
+      geom_text(aes(x="prin_graph_dim_1", y="prin_graph_dim_2", label="branch_point_idx"),
                 size=4, color="white", na.rm=TRUE, branch_point_df)
   }
   if (show_cell_names){
@@ -372,9 +372,9 @@ plot_genes_violin <- function (cds_subset, grouping = "State", min_expr = NULL, 
     cds_exprs$feature_label = factor(cds_exprs$feature_label, 
                                      levels = panel_order)
   }
-  q = ggplot(aes_string(x = grouping, y = "expression"), data = cds_exprs)
+  q = ggplot(aes(x = grouping, y = "expression"), data = cds_exprs)
   if (is.null(color_by) == FALSE) {
-    q = q + geom_violin(aes_string(fill = color_by))
+    q = q + geom_violin(aes(fill = color_by))
   }
   else {
     q = q + geom_violin()
@@ -382,7 +382,7 @@ plot_genes_violin <- function (cds_subset, grouping = "State", min_expr = NULL, 
   if (plot_trend == TRUE) {
     q = q + stat_summary(fun.data = "mean_cl_boot", 
                          size = 0.2)
-    q = q + stat_summary(aes_string(x = grouping, y = "expression", 
+    q = q + stat_summary(aes(x = grouping, y = "expression", 
                                     group = color_by), fun.data = "mean_cl_boot", 
                          size = 0.2, geom = "line")
   }
@@ -500,16 +500,16 @@ plot_genes_jitter <- function(cds_subset,
     cds_exprs$feature_label <- factor(cds_exprs$feature_label, levels=panel_order)
   }
   
-  q <- ggplot(aes_string(x=grouping, y="expression"), data=cds_exprs) 
+  q <- ggplot(aes(x=grouping, y="expression"), data=cds_exprs) 
   
   if (is.null(color_by) == FALSE){
-    q <- q + geom_jitter(aes_string(color=color_by), size=I(cell_size))
+    q <- q + geom_jitter(aes(color=color_by), size=I(cell_size))
   }else{
     q <- q + geom_jitter(size=I(cell_size))
   }
   if (plot_trend == TRUE){
-    q <- q + stat_summary(aes_string(color=color_by), fun.data = "mean_cl_boot", size=0.35)
-    q <- q + stat_summary(aes_string(x=grouping, y="expression", color=color_by, group=color_by), fun.data = "mean_cl_boot", size=0.35, geom="line")
+    q <- q + stat_summary(aes(color=color_by), fun.data = "mean_cl_boot", size=0.35)
+    q <- q + stat_summary(aes(x=grouping, y="expression", color=color_by, group=color_by), fun.data = "mean_cl_boot", size=0.35, geom="line")
   }
   
   q <- q + scale_y_log10() + facet_wrap(~feature_label, nrow=nrow, ncol=ncol, scales="free_y")
@@ -623,12 +623,12 @@ plot_genes_positive_cells <- function(cds_subset,
   #print (head(marker_counts))
   if (plot_as_fraction){
     marker_counts$target_fraction <- marker_counts$target_fraction * 100
-    qp <- ggplot(aes_string(x=grouping, y="target_fraction", fill=grouping), data=marker_counts) +
+    qp <- ggplot(aes(x=grouping, y="target_fraction", fill=grouping), data=marker_counts) +
       ylab("Cells (percent)")
     if (is.null(plot_limits) == FALSE)
       qp <- qp + scale_y_continuous(limits=plot_limits) 
   }else{
-    qp <- ggplot(aes_string(x=grouping, y="target", fill=grouping), data=marker_counts) +
+    qp <- ggplot(aes(x=grouping, y="target", fill=grouping), data=marker_counts) +
       ylab("Cells")
   }
   
@@ -756,7 +756,7 @@ plot_genes_in_pseudotime <-function(cds_subset,
     }
     q <- ggplot(aes(Pseudotime, expression), data = cds_exprs)
     if (is.null(color_by) == FALSE) {
-        q <- q + geom_point(aes_string(color = color_by), size = I(cell_size), position=position_jitter(horizontal_jitter, vertical_jitter))
+        q <- q + geom_point(aes(color = color_by), size = I(cell_size), position=position_jitter(horizontal_jitter, vertical_jitter))
     }
     else {
         q <- q + geom_point(size = I(cell_size), position=position_jitter(horizontal_jitter, vertical_jitter))
@@ -1458,7 +1458,7 @@ plot_genes_branched_pseudotime <- function (cds,
   #                       color = "black", linetype = "longdash")
   # }
   if (is.null(color_by) == FALSE) {
-    q <- q + geom_point(aes_string(color = color_by), size = I(cell_size))
+    q <- q + geom_point(aes(color = color_by), size = I(cell_size))
   }
   if (is.null(reducedModelFormulaStr) == FALSE)
     q <- q + scale_y_log10() + facet_wrap(~feature_label +
@@ -1469,12 +1469,12 @@ plot_genes_branched_pseudotime <- function (cds,
     q <- q + stat_smooth(aes(fill = Branch, color = Branch),
                          method = "loess")
   else if (method == "fitting") {
-    q <- q + geom_line(aes_string(x = "Pseudotime", y = "full_model_expectation",
+    q <- q + geom_line(aes(x = "Pseudotime", y = "full_model_expectation",
                                   linetype = "Branch"), data = cds_exprs) #+ scale_color_manual(name = "Type", values = c(colour_cell, colour), labels = c("Pre-branch", "AT1", "AT2", "AT1", "AT2")
   }
   
   if(!is.null(reducedModelFormulaStr)) {
-    q <- q + geom_line(aes_string(x = "Pseudotime", y = "reduced_model_expectation"),
+    q <- q + geom_line(aes(x = "Pseudotime", y = "reduced_model_expectation"),
                        color = 'black', linetype = 2, data =  cds_exprs)   
   }
   
@@ -2006,7 +2006,7 @@ plot_cell_clusters <- function(cds,
     g <- g + geom_point(aes(color=log10(value + 0.1)), size=I(cell_size), na.rm = TRUE) + 
       scale_color_viridis(name = paste0("log10(value + 0.1)"), ...)
   }else {
-    g <- g + geom_point(aes_string(color = color_by), size=I(cell_size), na.rm = TRUE)
+    g <- g + geom_point(aes(color = color_by), size=I(cell_size), na.rm = TRUE)
   }
   
   g <- g + 
@@ -2338,24 +2338,24 @@ plot_complex_cell_trajectory <- function(cds,
     g <- ggplot(data=data_df, aes(x=data_dim_1, y=data_dim_2)) 
   }
   if (show_tree){
-    g <- g + geom_segment(aes_string(x="source_prin_graph_dim_1", y="source_prin_graph_dim_2", xend="target_prin_graph_dim_1", yend="target_prin_graph_dim_2"), size=cell_link_size, linetype="solid", na.rm=TRUE, data=edge_df)
+    g <- g + geom_segment(aes(x="source_prin_graph_dim_1", y="source_prin_graph_dim_2", xend="target_prin_graph_dim_1", yend="target_prin_graph_dim_2"), size=cell_link_size, linetype="solid", na.rm=TRUE, data=edge_df)
   }
   
   # FIXME: setting size here overrides the marker expression funtionality. 
   # Don't do it!
   if (is.null(markers_exprs) == FALSE && nrow(markers_exprs) > 0){
     if(class(data_df[, color_by]) == 'numeric') {
-      g <- g + geom_jitter(aes_string(color = paste0("log10(", color_by, " + 0.1)")), size=I(cell_size), na.rm = TRUE, height=5) + 
+      g <- g + geom_jitter(aes(color = paste0("log10(", color_by, " + 0.1)")), size=I(cell_size), na.rm = TRUE, height=5) + 
                              scale_color_viridis(name = paste0("log10(", color_by, ")"), ...)
     } else {
-      g <- g + geom_jitter(aes_string(color = color_by), size=I(cell_size), na.rm = TRUE, height=5) 
+      g <- g + geom_jitter(aes(color = color_by), size=I(cell_size), na.rm = TRUE, height=5) 
     }
   }else {
     if(class(data_df[, color_by]) == 'numeric') {
-      g <- g + geom_jitter(aes_string(color = paste0("log10(", color_by, " + 0.1)")), size=I(cell_size), na.rm = TRUE, height=5) + 
+      g <- g + geom_jitter(aes(color = paste0("log10(", color_by, " + 0.1)")), size=I(cell_size), na.rm = TRUE, height=5) + 
         scale_color_viridis(name = paste0("log10(", color_by, " + 0.1)"), ...)
     } else {
-      g <- g + geom_jitter(aes_string(color = color_by), size=I(cell_size), na.rm = TRUE, height=5)
+      g <- g + geom_jitter(aes(color = color_by), size=I(cell_size), na.rm = TRUE, height=5)
     }
   }
 
@@ -2365,9 +2365,9 @@ plot_complex_cell_trajectory <- function(cds,
     branch_point_df$branch_point_idx <- match(branch_point_df$sample_name, mst_branch_nodes)
     branch_point_df <- branch_point_df[!duplicated(branch_point_df$branch_point_idx), ]
     
-    g <- g + geom_point(aes_string(x="source_prin_graph_dim_1", y="source_prin_graph_dim_2"), 
+    g <- g + geom_point(aes(x="source_prin_graph_dim_1", y="source_prin_graph_dim_2"), 
                         size=2 * cell_size, na.rm=TRUE, data=branch_point_df) +
-      geom_text(aes_string(x="source_prin_graph_dim_1", y="source_prin_graph_dim_2", label="branch_point_idx"), 
+      geom_text(aes(x="source_prin_graph_dim_1", y="source_prin_graph_dim_2", label="branch_point_idx"), 
                 size=1.5 * cell_size, color="white", na.rm=TRUE, data=branch_point_df)
   }
   if (show_cell_names){
@@ -2833,7 +2833,7 @@ plot_multiple_branches_pseudotime <- function(cds,
     #                       color = "black", linetype = "longdash")
     # }
     if (is.null(color_by) == FALSE) {
-        q <- q + geom_line(aes_string(color = color_by), size = I(cell_size))
+        q <- q + geom_line(aes(color = color_by), size = I(cell_size))
     }
     #if (is.null(reducedModelFormulaStr) == FALSE)
     q <- q + facet_wrap(~feature_label, nrow = nrow, ncol = ncol, scales = "free_y") #+ scale_y_log10() 
@@ -2843,12 +2843,12 @@ plot_multiple_branches_pseudotime <- function(cds,
     #  q <- q + stat_smooth(aes(fill = Branch, color = Branch),
     #                       method = "loess")
     #else if (method == "fitting") {
-    #  q <- q + geom_line(aes_string(x = "Pseudotime", y = "full_model_expectation",
+    #  q <- q + geom_line(aes(x = "Pseudotime", y = "full_model_expectation",
     #                                linetype = "Branch"), data = cds_exprs) #+ scale_color_manual(name = "Type", values = c(colour_cell, colour), labels = c("Pre-branch", "AT1", "AT2", "AT1", "AT2")
     #}
     
     #if(!is.null(reducedModelFormulaStr)) {
-    #  q <- q + geom_line(aes_string(x = "Pseudotime", y = "reduced_model_expectation"),
+    #  q <- q + geom_line(aes(x = "Pseudotime", y = "reduced_model_expectation"),
     #                     color = 'black', linetype = 2, data =  cds_exprs)   
     #}
     
